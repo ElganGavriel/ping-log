@@ -1,0 +1,27 @@
+{
+  "name": "ping-log",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nx run-many --target=dev --all --parallel",
+    "dev:api": "nx run api:dev",
+    "dev:web": "nx run web:dev",
+    "build": "nx run-many --target=build --all",
+    "codegen": "graphql-codegen --config codegen.ts",
+    "codegen:watch": "graphql-codegen --config codegen.ts --watch",
+    "lint": "nx run-many --target=lint --all"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/typescript": "^4.0.0",
+    "@graphql-codegen/typescript-operations": "^4.0.0",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.0",
+    "@graphql-codegen/typescript-resolvers": "^4.0.0",
+    "graphql": "^16.9.0",
+    "nx": "^20.0.0",
+    "typescript": "~5.7.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["@apollo/protobufjs", "esbuild", "nx"]
+  }
+}
