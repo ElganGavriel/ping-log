@@ -1,0 +1,29 @@
+variable "aws_region" {
+  description = "AWS region"
+  type        = string
+  default     = "ap-southeast-1"
+}
+
+variable "app_name" {
+  description = "Application name used for resource naming"
+  type        = string
+  default     = "ping-log"
+}
+
+variable "environment" {
+  description = "Deployment environment"
+  type        = string
+  default     = "production"
+}
+
+variable "mongodb_uri" {
+  description = "MongoDB Atlas connection string"
+  type        = string
+  sensitive   = true
+}
+
+variable "api_image_tag" {
+  description = "Docker image tag for the API"
+  type        = string
+  default     = "latest"
+}

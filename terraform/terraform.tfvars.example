@@ -1,0 +1,4 @@
+aws_region  = "ap-southeast-1"
+app_name    = "ping-log"
+environment = "production"
+mongodb_uri = "mongodb+srv://user:password@cluster.mongodb.net/ping-log?retryWrites=true&w=majority&appName=ping-log"
