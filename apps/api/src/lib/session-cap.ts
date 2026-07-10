@@ -14,7 +14,7 @@ async function closeSessionAtCap(doc: IPoopSession): Promise<void> {
  * past the cap is auto-closed at the cap and treated as if none is active.
  */
 export async function getActiveSession(userId: string): Promise<IPoopSession | null> {
-  const active = await PoopSession.findOne({ userId, endedAt: null });
+  const active = await PoopSession.findOne({ userId, endedAt: null, startedAt: { $exists: true, $ne: null } });
   if (!active) return null;
 
   const elapsedSeconds = (Date.now() - active.startedAt.getTime()) / 1000;
