@@ -138,11 +138,6 @@ export enum WageMode {
   Salary = 'SALARY'
 }
 
-export type ActivePoopSessionQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ActivePoopSessionQuery = { __typename?: 'Query', activePoopSession?: { __typename?: 'ActivePoopSession', id: string, startedAt: string, hourlyRate: number, currency: string } | null };
-
 export type CompanyLeaderboardQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
@@ -157,11 +152,6 @@ export type CreateCompanyMutationVariables = Exact<{
 
 export type CreateCompanyMutation = { __typename?: 'Mutation', createCompany: { __typename?: 'Company', id: string, name: string, joinCode: string } };
 
-export type HelloQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type HelloQuery = { __typename?: 'Query', hello: string };
-
 export type JoinCompanyMutationVariables = Exact<{
   joinCode: Scalars['String']['input'];
 }>;
@@ -174,10 +164,15 @@ export type LeaveCompanyMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LeaveCompanyMutation = { __typename?: 'Mutation', leaveCompany: { __typename?: 'Profile', id: string, company?: { __typename?: 'Company', id: string } | null } };
 
-export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+export type HelloQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'Profile', id: string, userId: string, displayName: string, currency?: string | null, wageMode?: WageMode | null, hourlyWage?: number | null, monthlySalary?: number | null, hoursPerWeek?: number | null, effectiveHourlyRate?: number | null, isReadyToTrack: boolean, company?: { __typename?: 'Company', id: string, name: string, joinCode: string } | null } | null };
+export type HelloQuery = { __typename?: 'Query', hello: string };
+
+export type ActivePoopSessionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ActivePoopSessionQuery = { __typename?: 'Query', activePoopSession?: { __typename?: 'ActivePoopSession', id: string, startedAt: string, hourlyRate: number, currency: string } | null };
 
 export type MyPoopSessionsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -198,6 +193,11 @@ export type StopPoopSessionMutationVariables = Exact<{
 
 export type StopPoopSessionMutation = { __typename?: 'Mutation', stopPoopSession: { __typename?: 'PoopSession', id: string, durationSeconds: number, hourlyRate: number, currency: string, moneyEarned: number, createdAt: string } };
 
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'Profile', id: string, userId: string, displayName: string, currency?: string | null, wageMode?: WageMode | null, hourlyWage?: number | null, monthlySalary?: number | null, hoursPerWeek?: number | null, effectiveHourlyRate?: number | null, isReadyToTrack: boolean, company?: { __typename?: 'Company', id: string, name: string, joinCode: string } | null } | null };
+
 export type UpdateProfileMutationVariables = Exact<{
   input: UpdateProfileInput;
 }>;
@@ -206,51 +206,6 @@ export type UpdateProfileMutationVariables = Exact<{
 export type UpdateProfileMutation = { __typename?: 'Mutation', updateProfile: { __typename?: 'Profile', id: string, currency?: string | null, wageMode?: WageMode | null, hourlyWage?: number | null, monthlySalary?: number | null, hoursPerWeek?: number | null, effectiveHourlyRate?: number | null, isReadyToTrack: boolean } };
 
 
-export const ActivePoopSessionDocument = gql`
-    query ActivePoopSession {
-  activePoopSession {
-    id
-    startedAt
-    hourlyRate
-    currency
-  }
-}
-    `;
-
-/**
- * __useActivePoopSessionQuery__
- *
- * To run a query within a React component, call `useActivePoopSessionQuery` and pass it any options that fit your needs.
- * When your component renders, `useActivePoopSessionQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useActivePoopSessionQuery({
- *   variables: {
- *   },
- * });
- */
-export function useActivePoopSessionQuery(baseOptions?: Apollo.QueryHookOptions<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>(ActivePoopSessionDocument, options);
-      }
-export function useActivePoopSessionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>(ActivePoopSessionDocument, options);
-        }
-// @ts-ignore
-export function useActivePoopSessionSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>): Apollo.UseSuspenseQueryResult<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>;
-export function useActivePoopSessionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>): Apollo.UseSuspenseQueryResult<ActivePoopSessionQuery | undefined, ActivePoopSessionQueryVariables>;
-export function useActivePoopSessionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>(ActivePoopSessionDocument, options);
-        }
-export type ActivePoopSessionQueryHookResult = ReturnType<typeof useActivePoopSessionQuery>;
-export type ActivePoopSessionLazyQueryHookResult = ReturnType<typeof useActivePoopSessionLazyQuery>;
-export type ActivePoopSessionSuspenseQueryHookResult = ReturnType<typeof useActivePoopSessionSuspenseQuery>;
-export type ActivePoopSessionQueryResult = Apollo.QueryResult<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>;
 export const CompanyLeaderboardDocument = gql`
     query CompanyLeaderboard($limit: Int) {
   companyLeaderboard(limit: $limit) {
@@ -333,46 +288,6 @@ export function useCreateCompanyMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateCompanyMutationHookResult = ReturnType<typeof useCreateCompanyMutation>;
 export type CreateCompanyMutationResult = Apollo.MutationResult<CreateCompanyMutation>;
 export type CreateCompanyMutationOptions = Apollo.BaseMutationOptions<CreateCompanyMutation, CreateCompanyMutationVariables>;
-export const HelloDocument = gql`
-    query Hello {
-  hello
-}
-    `;
-
-/**
- * __useHelloQuery__
- *
- * To run a query within a React component, call `useHelloQuery` and pass it any options that fit your needs.
- * When your component renders, `useHelloQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useHelloQuery({
- *   variables: {
- *   },
- * });
- */
-export function useHelloQuery(baseOptions?: Apollo.QueryHookOptions<HelloQuery, HelloQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HelloQuery, HelloQueryVariables>(HelloDocument, options);
-      }
-export function useHelloLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HelloQuery, HelloQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HelloQuery, HelloQueryVariables>(HelloDocument, options);
-        }
-// @ts-ignore
-export function useHelloSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<HelloQuery, HelloQueryVariables>): Apollo.UseSuspenseQueryResult<HelloQuery, HelloQueryVariables>;
-export function useHelloSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<HelloQuery, HelloQueryVariables>): Apollo.UseSuspenseQueryResult<HelloQuery | undefined, HelloQueryVariables>;
-export function useHelloSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<HelloQuery, HelloQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<HelloQuery, HelloQueryVariables>(HelloDocument, options);
-        }
-export type HelloQueryHookResult = ReturnType<typeof useHelloQuery>;
-export type HelloLazyQueryHookResult = ReturnType<typeof useHelloLazyQuery>;
-export type HelloSuspenseQueryHookResult = ReturnType<typeof useHelloSuspenseQuery>;
-export type HelloQueryResult = Apollo.QueryResult<HelloQuery, HelloQueryVariables>;
 export const JoinCompanyDocument = gql`
     mutation JoinCompany($joinCode: String!) {
   joinCompany(joinCode: $joinCode) {
@@ -446,62 +361,91 @@ export function useLeaveCompanyMutation(baseOptions?: Apollo.MutationHookOptions
 export type LeaveCompanyMutationHookResult = ReturnType<typeof useLeaveCompanyMutation>;
 export type LeaveCompanyMutationResult = Apollo.MutationResult<LeaveCompanyMutation>;
 export type LeaveCompanyMutationOptions = Apollo.BaseMutationOptions<LeaveCompanyMutation, LeaveCompanyMutationVariables>;
-export const MeDocument = gql`
-    query Me {
-  me {
-    id
-    userId
-    displayName
-    currency
-    wageMode
-    hourlyWage
-    monthlySalary
-    hoursPerWeek
-    effectiveHourlyRate
-    isReadyToTrack
-    company {
-      id
-      name
-      joinCode
-    }
-  }
+export const HelloDocument = gql`
+    query Hello {
+  hello
 }
     `;
 
 /**
- * __useMeQuery__
+ * __useHelloQuery__
  *
- * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
- * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useHelloQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHelloQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useMeQuery({
+ * const { data, loading, error } = useHelloQuery({
  *   variables: {
  *   },
  * });
  */
-export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+export function useHelloQuery(baseOptions?: Apollo.QueryHookOptions<HelloQuery, HelloQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+        return Apollo.useQuery<HelloQuery, HelloQueryVariables>(HelloDocument, options);
       }
-export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+export function useHelloLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HelloQuery, HelloQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+          return Apollo.useLazyQuery<HelloQuery, HelloQueryVariables>(HelloDocument, options);
         }
 // @ts-ignore
-export function useMeSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>): Apollo.UseSuspenseQueryResult<MeQuery, MeQueryVariables>;
-export function useMeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>): Apollo.UseSuspenseQueryResult<MeQuery | undefined, MeQueryVariables>;
-export function useMeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>) {
+export function useHelloSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<HelloQuery, HelloQueryVariables>): Apollo.UseSuspenseQueryResult<HelloQuery, HelloQueryVariables>;
+export function useHelloSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<HelloQuery, HelloQueryVariables>): Apollo.UseSuspenseQueryResult<HelloQuery | undefined, HelloQueryVariables>;
+export function useHelloSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<HelloQuery, HelloQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+          return Apollo.useSuspenseQuery<HelloQuery, HelloQueryVariables>(HelloDocument, options);
         }
-export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
-export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
-export type MeSuspenseQueryHookResult = ReturnType<typeof useMeSuspenseQuery>;
-export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export type HelloQueryHookResult = ReturnType<typeof useHelloQuery>;
+export type HelloLazyQueryHookResult = ReturnType<typeof useHelloLazyQuery>;
+export type HelloSuspenseQueryHookResult = ReturnType<typeof useHelloSuspenseQuery>;
+export type HelloQueryResult = Apollo.QueryResult<HelloQuery, HelloQueryVariables>;
+export const ActivePoopSessionDocument = gql`
+    query ActivePoopSession {
+  activePoopSession {
+    id
+    startedAt
+    hourlyRate
+    currency
+  }
+}
+    `;
+
+/**
+ * __useActivePoopSessionQuery__
+ *
+ * To run a query within a React component, call `useActivePoopSessionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useActivePoopSessionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useActivePoopSessionQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useActivePoopSessionQuery(baseOptions?: Apollo.QueryHookOptions<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>(ActivePoopSessionDocument, options);
+      }
+export function useActivePoopSessionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>(ActivePoopSessionDocument, options);
+        }
+// @ts-ignore
+export function useActivePoopSessionSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>): Apollo.UseSuspenseQueryResult<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>;
+export function useActivePoopSessionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>): Apollo.UseSuspenseQueryResult<ActivePoopSessionQuery | undefined, ActivePoopSessionQueryVariables>;
+export function useActivePoopSessionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>(ActivePoopSessionDocument, options);
+        }
+export type ActivePoopSessionQueryHookResult = ReturnType<typeof useActivePoopSessionQuery>;
+export type ActivePoopSessionLazyQueryHookResult = ReturnType<typeof useActivePoopSessionLazyQuery>;
+export type ActivePoopSessionSuspenseQueryHookResult = ReturnType<typeof useActivePoopSessionSuspenseQuery>;
+export type ActivePoopSessionQueryResult = Apollo.QueryResult<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>;
 export const MyPoopSessionsDocument = gql`
     query MyPoopSessions($limit: Int) {
   myPoopSessions(limit: $limit) {
@@ -623,6 +567,62 @@ export function useStopPoopSessionMutation(baseOptions?: Apollo.MutationHookOpti
 export type StopPoopSessionMutationHookResult = ReturnType<typeof useStopPoopSessionMutation>;
 export type StopPoopSessionMutationResult = Apollo.MutationResult<StopPoopSessionMutation>;
 export type StopPoopSessionMutationOptions = Apollo.BaseMutationOptions<StopPoopSessionMutation, StopPoopSessionMutationVariables>;
+export const MeDocument = gql`
+    query Me {
+  me {
+    id
+    userId
+    displayName
+    currency
+    wageMode
+    hourlyWage
+    monthlySalary
+    hoursPerWeek
+    effectiveHourlyRate
+    isReadyToTrack
+    company {
+      id
+      name
+      joinCode
+    }
+  }
+}
+    `;
+
+/**
+ * __useMeQuery__
+ *
+ * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+      }
+export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+        }
+// @ts-ignore
+export function useMeSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>): Apollo.UseSuspenseQueryResult<MeQuery, MeQueryVariables>;
+export function useMeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>): Apollo.UseSuspenseQueryResult<MeQuery | undefined, MeQueryVariables>;
+export function useMeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+        }
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
+export type MeSuspenseQueryHookResult = ReturnType<typeof useMeSuspenseQuery>;
+export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const UpdateProfileDocument = gql`
     mutation UpdateProfile($input: UpdateProfileInput!) {
   updateProfile(input: $input) {

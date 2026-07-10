@@ -1,0 +1,39 @@
+query ActivePoopSession {
+  activePoopSession {
+    id
+    startedAt
+    hourlyRate
+    currency
+  }
+}
+
+query MyPoopSessions($limit: Int) {
+  myPoopSessions(limit: $limit) {
+    id
+    durationSeconds
+    hourlyRate
+    currency
+    moneyEarned
+    createdAt
+  }
+}
+
+mutation StartPoopSession {
+  startPoopSession {
+    id
+    startedAt
+    hourlyRate
+    currency
+  }
+}
+
+mutation StopPoopSession($id: ID!) {
+  stopPoopSession(id: $id) {
+    id
+    durationSeconds
+    hourlyRate
+    currency
+    moneyEarned
+    createdAt
+  }
+}

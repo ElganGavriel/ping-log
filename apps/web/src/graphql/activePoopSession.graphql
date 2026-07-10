@@ -1,8 +1,0 @@
-query ActivePoopSession {
-  activePoopSession {
-    id
-    startedAt
-    hourlyRate
-    currency
-  }
-}

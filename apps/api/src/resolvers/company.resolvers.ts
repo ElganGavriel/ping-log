@@ -62,5 +62,23 @@ export const companyResolvers: Resolvers = {
       await profile.save();
       return company;
     },
+    joinCompany: async (_parent, { joinCode }, ctx) => {
+      const profile = await requireProfile(ctx);
+      const company = await Company.findOne({ joinCode: joinCode.trim().toUpperCase() });
+      if (!company) {
+        throw new GraphQLError('No company found with that code.', {
+          extensions: { code: 'INVALID_JOIN_CODE' },
+        });
+      }
+      profile.companyId = company._id;
+      await profile.save();
+      return profile;
+    },
+    leaveCompany: async (_parent, _args, ctx) => {
+      const profile = await requireProfile(ctx);
+      profile.companyId = null;
+      await profile.save();
+      return profile;
+    },
   },
 };

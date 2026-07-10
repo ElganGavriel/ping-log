@@ -2,7 +2,7 @@ import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: 'apps/api/src/schema/schema.graphql',
+  schema: 'apps/api/src/schema/*.graphql',
   generates: {
     // Typed resolver map for the API — ensures resolvers match the schema exactly
     'apps/api/src/generated/resolvers.generated.ts': {

@@ -1,0 +1,35 @@
+enum WageMode {
+  HOURLY
+  SALARY
+}
+
+extend type Query {
+  """Current authenticated user's profile, or null if not signed in."""
+  me: Profile
+}
+
+extend type Mutation {
+  updateProfile(input: UpdateProfileInput!): Profile!
+}
+
+type Profile {
+  id: ID!
+  userId: String!
+  displayName: String!
+  currency: String
+  wageMode: WageMode
+  hourlyWage: Float
+  monthlySalary: Float
+  hoursPerWeek: Float
+  effectiveHourlyRate: Float
+  isReadyToTrack: Boolean!
+  company: Company
+}
+
+input UpdateProfileInput {
+  currency: String
+  wageMode: WageMode
+  hourlyWage: Float
+  monthlySalary: Float
+  hoursPerWeek: Float
+}

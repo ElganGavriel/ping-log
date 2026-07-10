@@ -1,0 +1,37 @@
+query CompanyLeaderboard($limit: Int) {
+  companyLeaderboard(limit: $limit) {
+    userId
+    displayName
+    totalDurationSeconds
+    totalMoneyEarned
+    currency
+  }
+}
+
+mutation CreateCompany($input: CreateCompanyInput!) {
+  createCompany(input: $input) {
+    id
+    name
+    joinCode
+  }
+}
+
+mutation JoinCompany($joinCode: String!) {
+  joinCompany(joinCode: $joinCode) {
+    id
+    company {
+      id
+      name
+      joinCode
+    }
+  }
+}
+
+mutation LeaveCompany {
+  leaveCompany {
+    id
+    company {
+      id
+    }
+  }
+}

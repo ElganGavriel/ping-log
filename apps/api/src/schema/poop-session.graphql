@@ -1,0 +1,29 @@
+extend type Query {
+  """Current user's own poop sessions, newest first."""
+  myPoopSessions(limit: Int): [PoopSession!]!
+  """The caller's in-progress session, if any. Lets the UI resume a running stopwatch after a page refresh."""
+  activePoopSession: ActivePoopSession
+}
+
+extend type Mutation {
+  """Starts a session, or returns the already-running one if the caller has one open."""
+  startPoopSession: ActivePoopSession!
+  """Ends the given session. Duration is computed server-side from the recorded start time, capped at a max session length."""
+  stopPoopSession(id: ID!): PoopSession!
+}
+
+type PoopSession {
+  id: ID!
+  durationSeconds: Int!
+  hourlyRate: Float!
+  currency: String!
+  moneyEarned: Float!
+  createdAt: String!
+}
+
+type ActivePoopSession {
+  id: ID!
+  startedAt: String!
+  hourlyRate: Float!
+  currency: String!
+}

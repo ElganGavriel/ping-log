@@ -1,0 +1,28 @@
+extend type Query {
+  """Company leaderboard ranked by total time tracked. Requires the caller to be in a company."""
+  companyLeaderboard(limit: Int): [CompanyLeaderboardEntry!]!
+}
+
+extend type Mutation {
+  createCompany(input: CreateCompanyInput!): Company!
+  joinCompany(joinCode: String!): Profile!
+  leaveCompany: Profile!
+}
+
+type Company {
+  id: ID!
+  name: String!
+  joinCode: String!
+}
+
+type CompanyLeaderboardEntry {
+  userId: String!
+  displayName: String!
+  totalDurationSeconds: Int!
+  totalMoneyEarned: Float!
+  currency: String!
+}
+
+input CreateCompanyInput {
+  name: String!
+}

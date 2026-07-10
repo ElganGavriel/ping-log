@@ -1,9 +1,0 @@
-query CompanyLeaderboard($limit: Int) {
-  companyLeaderboard(limit: $limit) {
-    userId
-    displayName
-    totalDurationSeconds
-    totalMoneyEarned
-    currency
-  }
-}
