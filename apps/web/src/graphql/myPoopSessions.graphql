@@ -1,0 +1,10 @@
+query MyPoopSessions($limit: Int) {
+  myPoopSessions(limit: $limit) {
+    id
+    durationSeconds
+    hourlyRate
+    currency
+    moneyEarned
+    createdAt
+  }
+}

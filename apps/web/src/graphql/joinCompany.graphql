@@ -1,0 +1,10 @@
+mutation JoinCompany($joinCode: String!) {
+  joinCompany(joinCode: $joinCode) {
+    id
+    company {
+      id
+      name
+      joinCode
+    }
+  }
+}

@@ -1,15 +1,40 @@
-import { useHelloQuery } from './generated/graphql.generated';
+import { Routes, Route } from 'react-router-dom';
+import RequireAuth from './auth/RequireAuth';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
+import DashboardPage from './pages/DashboardPage';
+import SettingsPage from './pages/SettingsPage';
+import CompanyPage from './pages/CompanyPage';
 
 export default function App() {
-  const { loading, error, data } = useHelloQuery();
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
   return (
-    <div className="container">
-      <h1>Ping Log</h1>
-      <p className="subtitle">{data?.hello}</p>
-    </div>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route
+        path="/"
+        element={
+          <RequireAuth>
+            <DashboardPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <RequireAuth>
+            <SettingsPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/company"
+        element={
+          <RequireAuth>
+            <CompanyPage />
+          </RequireAuth>
+        }
+      />
+    </Routes>
   );
 }

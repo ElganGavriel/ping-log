@@ -27,3 +27,214 @@ h1 {
   color: #888;
   font-size: 1.1rem;
 }
+
+header {
+  margin-bottom: 2.5rem;
+}
+
+.card {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.card h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.form-row label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #999;
+  flex: 1;
+  min-width: 160px;
+}
+
+.form-row input {
+  background: #0f0f0f;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  color: #efefef;
+  font-size: 1rem;
+}
+
+.form-row input:focus {
+  outline: none;
+  border-color: #4ade80;
+}
+
+.stopwatch {
+  text-align: center;
+  padding: 1.5rem 0;
+}
+
+.stopwatch-time {
+  font-size: 3rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.stopwatch-money {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #4ade80;
+  font-variant-numeric: tabular-nums;
+}
+
+.commentary {
+  color: #888;
+  margin-top: 0.75rem;
+  min-height: 1.5em;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 0.85rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn:not(:disabled):hover {
+  opacity: 0.9;
+}
+
+.btn-start {
+  background: #4ade80;
+  color: #0f0f0f;
+}
+
+.btn-stop {
+  background: #f87171;
+  color: #0f0f0f;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.session-list,
+.leaderboard-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.session-list li,
+.leaderboard-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  background: #0f0f0f;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.session-name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.session-duration {
+  color: #888;
+}
+
+.session-money {
+  color: #4ade80;
+  font-weight: 700;
+}
+
+.rank {
+  width: 1.75rem;
+  text-align: center;
+}
+
+.session-list .session-duration {
+  flex: 1;
+}
+
+.form-row select {
+  background: #0f0f0f;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  color: #efefef;
+  font-size: 1rem;
+}
+
+.form-row select:focus {
+  outline: none;
+  border-color: #4ade80;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.navbar-links a {
+  color: #efefef;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.navbar-links a:hover {
+  color: #4ade80;
+}
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: #f87171;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}

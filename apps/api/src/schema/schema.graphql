@@ -1,7 +1,75 @@
+enum WageMode {
+  HOURLY
+  SALARY
+}
+
 type Query {
   hello: String!
+  """Current authenticated user's profile, or null if not signed in."""
+  me: Profile
+  """Current user's own poop sessions, newest first."""
+  myPoopSessions(limit: Int): [PoopSession!]!
+  """Company leaderboard ranked by total time tracked. Requires the caller to be in a company."""
+  companyLeaderboard(limit: Int): [CompanyLeaderboardEntry!]!
 }
 
 type Mutation {
-  _empty: String
+  updateProfile(input: UpdateProfileInput!): Profile!
+  createCompany(input: CreateCompanyInput!): Company!
+  joinCompany(joinCode: String!): Profile!
+  leaveCompany: Profile!
+  createPoopSession(input: CreatePoopSessionInput!): PoopSession!
+}
+
+type Profile {
+  id: ID!
+  userId: String!
+  displayName: String!
+  currency: String
+  wageMode: WageMode
+  hourlyWage: Float
+  monthlySalary: Float
+  hoursPerWeek: Float
+  effectiveHourlyRate: Float
+  isReadyToTrack: Boolean!
+  company: Company
+}
+
+type Company {
+  id: ID!
+  name: String!
+  joinCode: String!
+}
+
+type CompanyLeaderboardEntry {
+  userId: String!
+  displayName: String!
+  totalDurationSeconds: Int!
+  totalMoneyEarned: Float!
+  currency: String!
+}
+
+type PoopSession {
+  id: ID!
+  durationSeconds: Int!
+  hourlyRate: Float!
+  currency: String!
+  moneyEarned: Float!
+  createdAt: String!
+}
+
+input UpdateProfileInput {
+  currency: String
+  wageMode: WageMode
+  hourlyWage: Float
+  monthlySalary: Float
+  hoursPerWeek: Float
+}
+
+input CreateCompanyInput {
+  name: String!
+}
+
+input CreatePoopSessionInput {
+  durationSeconds: Int!
 }

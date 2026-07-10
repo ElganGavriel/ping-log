@@ -1,0 +1,8 @@
+mutation LeaveCompany {
+  leaveCompany {
+    id
+    company {
+      id
+    }
+  }
+}

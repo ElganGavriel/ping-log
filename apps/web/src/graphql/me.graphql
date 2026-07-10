@@ -1,0 +1,19 @@
+query Me {
+  me {
+    id
+    userId
+    displayName
+    currency
+    wageMode
+    hourlyWage
+    monthlySalary
+    hoursPerWeek
+    effectiveHourlyRate
+    isReadyToTrack
+    company {
+      id
+      name
+      joinCode
+    }
+  }
+}

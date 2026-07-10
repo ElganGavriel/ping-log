@@ -9,6 +9,10 @@ const config: CodegenConfig = {
       plugins: ['typescript', 'typescript-resolvers'],
       config: {
         useIndexSignature: true,
+        mappers: {
+          Profile: '../models/profile.model.js#IProfile',
+          Company: '../models/company.model.js#ICompany',
+        },
       },
     },
     // Typed operations + Apollo hooks for the web app

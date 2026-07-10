@@ -1,0 +1,10 @@
+mutation CreatePoopSession($input: CreatePoopSessionInput!) {
+  createPoopSession(input: $input) {
+    id
+    durationSeconds
+    hourlyRate
+    currency
+    moneyEarned
+    createdAt
+  }
+}
