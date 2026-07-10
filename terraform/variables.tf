@@ -28,6 +28,18 @@ variable "better_auth_secret" {
   sensitive   = true
 }
 
+variable "resend_api_key" {
+  description = "Resend API key for sending password reset emails"
+  type        = string
+  sensitive   = true
+}
+
+variable "resend_from_email" {
+  description = "From address used for password reset emails"
+  type        = string
+  default     = "Ping Log <onboarding@resend.dev>"
+}
+
 variable "api_image_tag" {
   description = "Docker image tag for the API"
   type        = string

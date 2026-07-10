@@ -56,6 +56,9 @@ export default function LoginPage() {
         <p className="subtitle" style={{ marginTop: '1rem' }}>
           No account yet? <Link to="/signup">Sign up</Link>
         </p>
+        <p className="subtitle" style={{ marginTop: '0.5rem' }}>
+          <Link to="/forgot-password">Forgot your password?</Link>
+        </p>
       </section>
     </div>
   );

@@ -37,6 +37,7 @@ resource "aws_ecs_task_definition" "api" {
       { name = "PORT", value = "4000" },
       { name = "CORS_ORIGIN", value = "https://${aws_cloudfront_distribution.web.domain_name}" },
       { name = "BETTER_AUTH_URL", value = "https://${aws_cloudfront_distribution.web.domain_name}" },
+      { name = "RESEND_FROM_EMAIL", value = var.resend_from_email },
     ]
 
     secrets = [
@@ -47,6 +48,10 @@ resource "aws_ecs_task_definition" "api" {
       {
         name      = "BETTER_AUTH_SECRET"
         valueFrom = aws_ssm_parameter.better_auth_secret.arn
+      },
+      {
+        name      = "RESEND_API_KEY"
+        valueFrom = aws_ssm_parameter.resend_api_key.arn
       },
     ]
 

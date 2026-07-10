@@ -2,6 +2,7 @@ import { betterAuth } from 'better-auth';
 import { mongodbAdapter } from 'better-auth/adapters/mongodb';
 import type { Db, MongoClient } from 'mongodb';
 import { Profile } from '../models/profile.model.js';
+import { sendPasswordResetEmail } from '../lib/email.js';
 
 export function createAuth(db: Db, client: MongoClient) {
   return betterAuth({
@@ -9,7 +10,12 @@ export function createAuth(db: Db, client: MongoClient) {
     secret: process.env.BETTER_AUTH_SECRET,
     baseURL: process.env.BETTER_AUTH_URL ?? `http://localhost:${process.env.PORT ?? 4000}`,
     trustedOrigins: [process.env.CORS_ORIGIN ?? 'http://localhost:3000'],
-    emailAndPassword: { enabled: true },
+    emailAndPassword: {
+      enabled: true,
+      sendResetPassword: async ({ user, url }) => {
+        await sendPasswordResetEmail(user.email, url);
+      },
+    },
     databaseHooks: {
       user: {
         create: {

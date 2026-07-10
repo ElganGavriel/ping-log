@@ -16,6 +16,14 @@ resource "aws_ssm_parameter" "better_auth_secret" {
   tags = { Name = "${var.app_name}-better-auth-secret" }
 }
 
+resource "aws_ssm_parameter" "resend_api_key" {
+  name  = "/${var.app_name}/resend-api-key"
+  type  = "SecureString"
+  value = var.resend_api_key
+
+  tags = { Name = "${var.app_name}-resend-api-key" }
+}
+
 # Allow ECS task execution role to read SSM parameters
 resource "aws_iam_role_policy" "ecs_ssm" {
   name = "${var.app_name}-ecs-ssm-policy"
@@ -29,6 +37,7 @@ resource "aws_iam_role_policy" "ecs_ssm" {
       Resource = [
         aws_ssm_parameter.mongodb_uri.arn,
         aws_ssm_parameter.better_auth_secret.arn,
+        aws_ssm_parameter.resend_api_key.arn,
       ]
     }]
   })

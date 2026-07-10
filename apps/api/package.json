@@ -17,7 +17,8 @@
     "express": "^4.21.0",
     "graphql": "^16.9.0",
     "mongodb": "~6.20.0",
-    "mongoose": "^8.7.0"
+    "mongoose": "^8.7.0",
+    "resend": "^4.0.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
