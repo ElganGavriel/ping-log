@@ -15,8 +15,8 @@ COPY packages/shared ./packages/shared
 
 RUN cd apps/api && tsc
 
-# Copy schema.graphql to dist (tsc doesn't copy non-TS files)
-RUN cp apps/api/src/schema/schema.graphql apps/api/dist/schema/schema.graphql
+# Copy schema .graphql files to dist (tsc doesn't copy non-TS files)
+RUN cp apps/api/src/schema/*.graphql apps/api/dist/schema/
 
 # --- Production stage ---
 FROM node:20-alpine AS runner
