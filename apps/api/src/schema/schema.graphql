@@ -9,6 +9,8 @@ type Query {
   me: Profile
   """Current user's own poop sessions, newest first."""
   myPoopSessions(limit: Int): [PoopSession!]!
+  """The caller's in-progress session, if any. Lets the UI resume a running stopwatch after a page refresh."""
+  activePoopSession: ActivePoopSession
   """Company leaderboard ranked by total time tracked. Requires the caller to be in a company."""
   companyLeaderboard(limit: Int): [CompanyLeaderboardEntry!]!
 }
@@ -18,7 +20,10 @@ type Mutation {
   createCompany(input: CreateCompanyInput!): Company!
   joinCompany(joinCode: String!): Profile!
   leaveCompany: Profile!
-  createPoopSession(input: CreatePoopSessionInput!): PoopSession!
+  """Starts a session, or returns the already-running one if the caller has one open."""
+  startPoopSession: ActivePoopSession!
+  """Ends the given session. Duration is computed server-side from the recorded start time, capped at a max session length."""
+  stopPoopSession(id: ID!): PoopSession!
 }
 
 type Profile {
@@ -58,6 +63,13 @@ type PoopSession {
   createdAt: String!
 }
 
+type ActivePoopSession {
+  id: ID!
+  startedAt: String!
+  hourlyRate: Float!
+  currency: String!
+}
+
 input UpdateProfileInput {
   currency: String
   wageMode: WageMode
@@ -68,8 +80,4 @@ input UpdateProfileInput {
 
 input CreateCompanyInput {
   name: String!
-}
-
-input CreatePoopSessionInput {
-  durationSeconds: Int!
 }

@@ -17,6 +17,14 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type ActivePoopSession = {
+  __typename?: 'ActivePoopSession';
+  currency: Scalars['String']['output'];
+  hourlyRate: Scalars['Float']['output'];
+  id: Scalars['ID']['output'];
+  startedAt: Scalars['String']['output'];
+};
+
 export type Company = {
   __typename?: 'Company';
   id: Scalars['ID']['output'];
@@ -37,16 +45,15 @@ export type CreateCompanyInput = {
   name: Scalars['String']['input'];
 };
 
-export type CreatePoopSessionInput = {
-  durationSeconds: Scalars['Int']['input'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   createCompany: Company;
-  createPoopSession: PoopSession;
   joinCompany: Profile;
   leaveCompany: Profile;
+  /** Starts a session, or returns the already-running one if the caller has one open. */
+  startPoopSession: ActivePoopSession;
+  /** Ends the given session. Duration is computed server-side from the recorded start time, capped at a max session length. */
+  stopPoopSession: PoopSession;
   updateProfile: Profile;
 };
 
@@ -56,13 +63,13 @@ export type MutationCreateCompanyArgs = {
 };
 
 
-export type MutationCreatePoopSessionArgs = {
-  input: CreatePoopSessionInput;
+export type MutationJoinCompanyArgs = {
+  joinCode: Scalars['String']['input'];
 };
 
 
-export type MutationJoinCompanyArgs = {
-  joinCode: Scalars['String']['input'];
+export type MutationStopPoopSessionArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -97,6 +104,8 @@ export type Profile = {
 
 export type Query = {
   __typename?: 'Query';
+  /** The caller's in-progress session, if any. Lets the UI resume a running stopwatch after a page refresh. */
+  activePoopSession?: Maybe<ActivePoopSession>;
   /** Company leaderboard ranked by total time tracked. Requires the caller to be in a company. */
   companyLeaderboard: Array<CompanyLeaderboardEntry>;
   hello: Scalars['String']['output'];
@@ -129,6 +138,11 @@ export enum WageMode {
   Salary = 'SALARY'
 }
 
+export type ActivePoopSessionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ActivePoopSessionQuery = { __typename?: 'Query', activePoopSession?: { __typename?: 'ActivePoopSession', id: string, startedAt: string, hourlyRate: number, currency: string } | null };
+
 export type CompanyLeaderboardQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
@@ -142,13 +156,6 @@ export type CreateCompanyMutationVariables = Exact<{
 
 
 export type CreateCompanyMutation = { __typename?: 'Mutation', createCompany: { __typename?: 'Company', id: string, name: string, joinCode: string } };
-
-export type CreatePoopSessionMutationVariables = Exact<{
-  input: CreatePoopSessionInput;
-}>;
-
-
-export type CreatePoopSessionMutation = { __typename?: 'Mutation', createPoopSession: { __typename?: 'PoopSession', id: string, durationSeconds: number, hourlyRate: number, currency: string, moneyEarned: number, createdAt: string } };
 
 export type HelloQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -179,6 +186,18 @@ export type MyPoopSessionsQueryVariables = Exact<{
 
 export type MyPoopSessionsQuery = { __typename?: 'Query', myPoopSessions: Array<{ __typename?: 'PoopSession', id: string, durationSeconds: number, hourlyRate: number, currency: string, moneyEarned: number, createdAt: string }> };
 
+export type StartPoopSessionMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StartPoopSessionMutation = { __typename?: 'Mutation', startPoopSession: { __typename?: 'ActivePoopSession', id: string, startedAt: string, hourlyRate: number, currency: string } };
+
+export type StopPoopSessionMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type StopPoopSessionMutation = { __typename?: 'Mutation', stopPoopSession: { __typename?: 'PoopSession', id: string, durationSeconds: number, hourlyRate: number, currency: string, moneyEarned: number, createdAt: string } };
+
 export type UpdateProfileMutationVariables = Exact<{
   input: UpdateProfileInput;
 }>;
@@ -187,6 +206,51 @@ export type UpdateProfileMutationVariables = Exact<{
 export type UpdateProfileMutation = { __typename?: 'Mutation', updateProfile: { __typename?: 'Profile', id: string, currency?: string | null, wageMode?: WageMode | null, hourlyWage?: number | null, monthlySalary?: number | null, hoursPerWeek?: number | null, effectiveHourlyRate?: number | null, isReadyToTrack: boolean } };
 
 
+export const ActivePoopSessionDocument = gql`
+    query ActivePoopSession {
+  activePoopSession {
+    id
+    startedAt
+    hourlyRate
+    currency
+  }
+}
+    `;
+
+/**
+ * __useActivePoopSessionQuery__
+ *
+ * To run a query within a React component, call `useActivePoopSessionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useActivePoopSessionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useActivePoopSessionQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useActivePoopSessionQuery(baseOptions?: Apollo.QueryHookOptions<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>(ActivePoopSessionDocument, options);
+      }
+export function useActivePoopSessionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>(ActivePoopSessionDocument, options);
+        }
+// @ts-ignore
+export function useActivePoopSessionSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>): Apollo.UseSuspenseQueryResult<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>;
+export function useActivePoopSessionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>): Apollo.UseSuspenseQueryResult<ActivePoopSessionQuery | undefined, ActivePoopSessionQueryVariables>;
+export function useActivePoopSessionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>(ActivePoopSessionDocument, options);
+        }
+export type ActivePoopSessionQueryHookResult = ReturnType<typeof useActivePoopSessionQuery>;
+export type ActivePoopSessionLazyQueryHookResult = ReturnType<typeof useActivePoopSessionLazyQuery>;
+export type ActivePoopSessionSuspenseQueryHookResult = ReturnType<typeof useActivePoopSessionSuspenseQuery>;
+export type ActivePoopSessionQueryResult = Apollo.QueryResult<ActivePoopSessionQuery, ActivePoopSessionQueryVariables>;
 export const CompanyLeaderboardDocument = gql`
     query CompanyLeaderboard($limit: Int) {
   companyLeaderboard(limit: $limit) {
@@ -269,44 +333,6 @@ export function useCreateCompanyMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateCompanyMutationHookResult = ReturnType<typeof useCreateCompanyMutation>;
 export type CreateCompanyMutationResult = Apollo.MutationResult<CreateCompanyMutation>;
 export type CreateCompanyMutationOptions = Apollo.BaseMutationOptions<CreateCompanyMutation, CreateCompanyMutationVariables>;
-export const CreatePoopSessionDocument = gql`
-    mutation CreatePoopSession($input: CreatePoopSessionInput!) {
-  createPoopSession(input: $input) {
-    id
-    durationSeconds
-    hourlyRate
-    currency
-    moneyEarned
-    createdAt
-  }
-}
-    `;
-export type CreatePoopSessionMutationFn = Apollo.MutationFunction<CreatePoopSessionMutation, CreatePoopSessionMutationVariables>;
-
-/**
- * __useCreatePoopSessionMutation__
- *
- * To run a mutation, you first call `useCreatePoopSessionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreatePoopSessionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createPoopSessionMutation, { data, loading, error }] = useCreatePoopSessionMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreatePoopSessionMutation(baseOptions?: Apollo.MutationHookOptions<CreatePoopSessionMutation, CreatePoopSessionMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePoopSessionMutation, CreatePoopSessionMutationVariables>(CreatePoopSessionDocument, options);
-      }
-export type CreatePoopSessionMutationHookResult = ReturnType<typeof useCreatePoopSessionMutation>;
-export type CreatePoopSessionMutationResult = Apollo.MutationResult<CreatePoopSessionMutation>;
-export type CreatePoopSessionMutationOptions = Apollo.BaseMutationOptions<CreatePoopSessionMutation, CreatePoopSessionMutationVariables>;
 export const HelloDocument = gql`
     query Hello {
   hello
@@ -524,6 +550,79 @@ export type MyPoopSessionsQueryHookResult = ReturnType<typeof useMyPoopSessionsQ
 export type MyPoopSessionsLazyQueryHookResult = ReturnType<typeof useMyPoopSessionsLazyQuery>;
 export type MyPoopSessionsSuspenseQueryHookResult = ReturnType<typeof useMyPoopSessionsSuspenseQuery>;
 export type MyPoopSessionsQueryResult = Apollo.QueryResult<MyPoopSessionsQuery, MyPoopSessionsQueryVariables>;
+export const StartPoopSessionDocument = gql`
+    mutation StartPoopSession {
+  startPoopSession {
+    id
+    startedAt
+    hourlyRate
+    currency
+  }
+}
+    `;
+export type StartPoopSessionMutationFn = Apollo.MutationFunction<StartPoopSessionMutation, StartPoopSessionMutationVariables>;
+
+/**
+ * __useStartPoopSessionMutation__
+ *
+ * To run a mutation, you first call `useStartPoopSessionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStartPoopSessionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [startPoopSessionMutation, { data, loading, error }] = useStartPoopSessionMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useStartPoopSessionMutation(baseOptions?: Apollo.MutationHookOptions<StartPoopSessionMutation, StartPoopSessionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<StartPoopSessionMutation, StartPoopSessionMutationVariables>(StartPoopSessionDocument, options);
+      }
+export type StartPoopSessionMutationHookResult = ReturnType<typeof useStartPoopSessionMutation>;
+export type StartPoopSessionMutationResult = Apollo.MutationResult<StartPoopSessionMutation>;
+export type StartPoopSessionMutationOptions = Apollo.BaseMutationOptions<StartPoopSessionMutation, StartPoopSessionMutationVariables>;
+export const StopPoopSessionDocument = gql`
+    mutation StopPoopSession($id: ID!) {
+  stopPoopSession(id: $id) {
+    id
+    durationSeconds
+    hourlyRate
+    currency
+    moneyEarned
+    createdAt
+  }
+}
+    `;
+export type StopPoopSessionMutationFn = Apollo.MutationFunction<StopPoopSessionMutation, StopPoopSessionMutationVariables>;
+
+/**
+ * __useStopPoopSessionMutation__
+ *
+ * To run a mutation, you first call `useStopPoopSessionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStopPoopSessionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [stopPoopSessionMutation, { data, loading, error }] = useStopPoopSessionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useStopPoopSessionMutation(baseOptions?: Apollo.MutationHookOptions<StopPoopSessionMutation, StopPoopSessionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<StopPoopSessionMutation, StopPoopSessionMutationVariables>(StopPoopSessionDocument, options);
+      }
+export type StopPoopSessionMutationHookResult = ReturnType<typeof useStopPoopSessionMutation>;
+export type StopPoopSessionMutationResult = Apollo.MutationResult<StopPoopSessionMutation>;
+export type StopPoopSessionMutationOptions = Apollo.BaseMutationOptions<StopPoopSessionMutation, StopPoopSessionMutationVariables>;
 export const UpdateProfileDocument = gql`
     mutation UpdateProfile($input: UpdateProfileInput!) {
   updateProfile(input: $input) {

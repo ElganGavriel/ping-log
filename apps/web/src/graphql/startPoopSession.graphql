@@ -1,0 +1,8 @@
+mutation StartPoopSession {
+  startPoopSession {
+    id
+    startedAt
+    hourlyRate
+    currency
+  }
+}

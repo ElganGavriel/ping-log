@@ -21,7 +21,7 @@ export const companyResolvers: Resolvers = {
       );
 
       const totals = await PoopSession.aggregate([
-        { $match: { userId: { $in: members.map((m) => m.userId) } } },
+        { $match: { userId: { $in: members.map((m) => m.userId) }, endedAt: { $ne: null } } },
         {
           $group: {
             _id: '$userId',

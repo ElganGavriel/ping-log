@@ -1,0 +1,10 @@
+mutation StopPoopSession($id: ID!) {
+  stopPoopSession(id: $id) {
+    id
+    durationSeconds
+    hourlyRate
+    currency
+    moneyEarned
+    createdAt
+  }
+}

@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useCreatePoopSessionMutation, type MeQuery } from '../generated/graphql.generated';
+import {
+  useActivePoopSessionQuery,
+  useStartPoopSessionMutation,
+  useStopPoopSessionMutation,
+  type MeQuery,
+} from '../generated/graphql.generated';
 import { formatMoney } from '../lib/currencies';
+
+const MAX_SESSION_DURATION_SECONDS = 2 * 60 * 60;
 
 const MILESTONES: [number, string][] = [
   [0, 'Just getting comfortable...'],
@@ -42,19 +49,46 @@ interface Props {
 export default function StopwatchTracker({ me }: Props) {
   const [running, setRunning] = useState(false);
   const [elapsedMs, setElapsedMs] = useState(0);
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const startRef = useRef<number | null>(null);
   const frameRef = useRef<number>();
 
-  const [createPoopSession, { loading: saving }] = useCreatePoopSessionMutation({
+  const { data: activeData } = useActivePoopSessionQuery({ fetchPolicy: 'network-only' });
+  const [startPoopSession, { loading: starting }] = useStartPoopSessionMutation();
+  const [stopPoopSession, { loading: stopping }] = useStopPoopSessionMutation({
     refetchQueries: ['MyPoopSessions', 'CompanyLeaderboard'],
     awaitRefetchQueries: true,
   });
+  const saving = starting || stopping;
+
+  useEffect(() => {
+    const active = activeData?.activePoopSession;
+    if (active && !running) {
+      startRef.current = new Date(active.startedAt).getTime();
+      setActiveSessionId(active.id);
+      setRunning(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeData]);
+
+  const stopSession = async (id: string) => {
+    setRunning(false);
+    startRef.current = null;
+    setActiveSessionId(null);
+    setElapsedMs(0);
+    await stopPoopSession({ variables: { id } });
+  };
 
   useEffect(() => {
     if (!running) return;
     const tick = () => {
       if (startRef.current !== null) {
-        setElapsedMs(Date.now() - startRef.current);
+        const ms = Date.now() - startRef.current;
+        setElapsedMs(ms);
+        if (ms / 1000 >= MAX_SESSION_DURATION_SECONDS && activeSessionId) {
+          void stopSession(activeSessionId);
+          return;
+        }
       }
       frameRef.current = requestAnimationFrame(tick);
     };
@@ -62,31 +96,27 @@ export default function StopwatchTracker({ me }: Props) {
     return () => {
       if (frameRef.current !== undefined) cancelAnimationFrame(frameRef.current);
     };
-  }, [running]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [running, activeSessionId]);
 
   const elapsedSeconds = elapsedMs / 1000;
   const rate = me.effectiveHourlyRate ?? 0;
   const currency = me.currency ?? 'USD';
-  const moneyEarned = (rate / 3600) * elapsedSeconds;
+  const moneyEarned = (rate / 3600) * Math.min(elapsedSeconds, MAX_SESSION_DURATION_SECONDS);
 
-  const handleStart = () => {
-    startRef.current = Date.now();
-    setElapsedMs(0);
+  const handleStart = async () => {
+    const { data } = await startPoopSession();
+    const session = data?.startPoopSession;
+    if (!session) return;
+    startRef.current = new Date(session.startedAt).getTime();
+    setActiveSessionId(session.id);
+    setElapsedMs(Date.now() - startRef.current);
     setRunning(true);
   };
 
-  const handleStop = async () => {
-    setRunning(false);
-    const durationSeconds = Math.round(elapsedSeconds);
-    startRef.current = null;
-
-    if (durationSeconds < 1) {
-      setElapsedMs(0);
-      return;
-    }
-
-    await createPoopSession({ variables: { input: { durationSeconds } } });
-    setElapsedMs(0);
+  const handleStop = () => {
+    if (!activeSessionId) return;
+    void stopSession(activeSessionId);
   };
 
   if (!me.isReadyToTrack) {
@@ -106,16 +136,22 @@ export default function StopwatchTracker({ me }: Props) {
       <div className="stopwatch">
         <div className="stopwatch-time">{formatClock(elapsedSeconds)}</div>
         <div className="stopwatch-money">{formatMoney(moneyEarned, currency, 4)}</div>
-        <p className="commentary">{running ? getCommentary(elapsedSeconds) : 'Ready when you are.'}</p>
+        <p className="commentary">
+          {running
+            ? elapsedSeconds >= MAX_SESSION_DURATION_SECONDS
+              ? "Hit the 2-hour cap. Wrapping this up for you..."
+              : getCommentary(elapsedSeconds)
+            : 'Ready when you are.'}
+        </p>
       </div>
 
       {!running ? (
-        <button className="btn btn-start" onClick={handleStart}>
-          💩 Start Session
+        <button className="btn btn-start" onClick={handleStart} disabled={saving}>
+          {starting ? 'Starting...' : '💩 Start Session'}
         </button>
       ) : (
         <button className="btn btn-stop" onClick={handleStop} disabled={saving}>
-          {saving ? 'Saving...' : '✅ Done, Cash Out'}
+          {stopping ? 'Saving...' : '✅ Done, Cash Out'}
         </button>
       )}
     </section>

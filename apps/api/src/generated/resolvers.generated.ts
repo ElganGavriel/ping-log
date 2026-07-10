@@ -18,6 +18,14 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type ActivePoopSession = {
+  __typename?: 'ActivePoopSession';
+  currency: Scalars['String']['output'];
+  hourlyRate: Scalars['Float']['output'];
+  id: Scalars['ID']['output'];
+  startedAt: Scalars['String']['output'];
+};
+
 export type Company = {
   __typename?: 'Company';
   id: Scalars['ID']['output'];
@@ -38,16 +46,15 @@ export type CreateCompanyInput = {
   name: Scalars['String']['input'];
 };
 
-export type CreatePoopSessionInput = {
-  durationSeconds: Scalars['Int']['input'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   createCompany: Company;
-  createPoopSession: PoopSession;
   joinCompany: Profile;
   leaveCompany: Profile;
+  /** Starts a session, or returns the already-running one if the caller has one open. */
+  startPoopSession: ActivePoopSession;
+  /** Ends the given session. Duration is computed server-side from the recorded start time, capped at a max session length. */
+  stopPoopSession: PoopSession;
   updateProfile: Profile;
 };
 
@@ -57,13 +64,13 @@ export type MutationCreateCompanyArgs = {
 };
 
 
-export type MutationCreatePoopSessionArgs = {
-  input: CreatePoopSessionInput;
+export type MutationJoinCompanyArgs = {
+  joinCode: Scalars['String']['input'];
 };
 
 
-export type MutationJoinCompanyArgs = {
-  joinCode: Scalars['String']['input'];
+export type MutationStopPoopSessionArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -98,6 +105,8 @@ export type Profile = {
 
 export type Query = {
   __typename?: 'Query';
+  /** The caller's in-progress session, if any. Lets the UI resume a running stopwatch after a page refresh. */
+  activePoopSession?: Maybe<ActivePoopSession>;
   /** Company leaderboard ranked by total time tracked. Requires the caller to be in a company. */
   companyLeaderboard: Array<CompanyLeaderboardEntry>;
   hello: Scalars['String']['output'];
@@ -202,11 +211,11 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  ActivePoopSession: ResolverTypeWrapper<ActivePoopSession>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Company: ResolverTypeWrapper<ICompany>;
   CompanyLeaderboardEntry: ResolverTypeWrapper<CompanyLeaderboardEntry>;
   CreateCompanyInput: CreateCompanyInput;
-  CreatePoopSessionInput: CreatePoopSessionInput;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
@@ -221,11 +230,11 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
+  ActivePoopSession: ActivePoopSession;
   Boolean: Scalars['Boolean']['output'];
   Company: ICompany;
   CompanyLeaderboardEntry: CompanyLeaderboardEntry;
   CreateCompanyInput: CreateCompanyInput;
-  CreatePoopSessionInput: CreatePoopSessionInput;
   Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
@@ -235,6 +244,14 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {};
   String: Scalars['String']['output'];
   UpdateProfileInput: UpdateProfileInput;
+}>;
+
+export type ActivePoopSessionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActivePoopSession'] = ResolversParentTypes['ActivePoopSession']> = ResolversObject<{
+  currency?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  hourlyRate?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  startedAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type CompanyResolvers<ContextType = any, ParentType extends ResolversParentTypes['Company'] = ResolversParentTypes['Company']> = ResolversObject<{
@@ -255,9 +272,10 @@ export type CompanyLeaderboardEntryResolvers<ContextType = any, ParentType exten
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   createCompany?: Resolver<ResolversTypes['Company'], ParentType, ContextType, RequireFields<MutationCreateCompanyArgs, 'input'>>;
-  createPoopSession?: Resolver<ResolversTypes['PoopSession'], ParentType, ContextType, RequireFields<MutationCreatePoopSessionArgs, 'input'>>;
   joinCompany?: Resolver<ResolversTypes['Profile'], ParentType, ContextType, RequireFields<MutationJoinCompanyArgs, 'joinCode'>>;
   leaveCompany?: Resolver<ResolversTypes['Profile'], ParentType, ContextType>;
+  startPoopSession?: Resolver<ResolversTypes['ActivePoopSession'], ParentType, ContextType>;
+  stopPoopSession?: Resolver<ResolversTypes['PoopSession'], ParentType, ContextType, RequireFields<MutationStopPoopSessionArgs, 'id'>>;
   updateProfile?: Resolver<ResolversTypes['Profile'], ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'input'>>;
 }>;
 
@@ -287,6 +305,7 @@ export type ProfileResolvers<ContextType = any, ParentType extends ResolversPare
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  activePoopSession?: Resolver<Maybe<ResolversTypes['ActivePoopSession']>, ParentType, ContextType>;
   companyLeaderboard?: Resolver<Array<ResolversTypes['CompanyLeaderboardEntry']>, ParentType, ContextType, Partial<QueryCompanyLeaderboardArgs>>;
   hello?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   me?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType>;
@@ -294,6 +313,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  ActivePoopSession?: ActivePoopSessionResolvers<ContextType>;
   Company?: CompanyResolvers<ContextType>;
   CompanyLeaderboardEntry?: CompanyLeaderboardEntryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
