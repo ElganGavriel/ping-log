@@ -39,3 +39,10 @@ Copy `apps/api/.env.example` → `apps/api/.env` and set `MONGODB_URI`.
 - Web: http://localhost:3000
 - API / GraphQL playground: http://localhost:4000/graphql
 - Vite proxies `/graphql` → `:4000` so the client uses relative URLs
+
+## Infrastructure
+
+- **API** (`apps/api/Dockerfile`): multi-stage Node 20 Alpine build, runs on ECS behind an ALB, image pushed to ECR
+- **Web** (`apps/web/Dockerfile`): multi-stage build served by nginx (`apps/web/nginx.conf`); production deploy instead ships the static `dist` build to S3 + CloudFront
+- **Terraform** (`terraform/`): AWS resources — VPC, ALB, ECS, ECR, S3, CloudFront, IAM, SSM — region `ap-southeast-1`, MongoDB is Atlas (external, passed via `mongodb_uri` var)
+- **CI/CD** (`.github/workflows/deploy.yml`): on push to `master` — builds/pushes the API image to ECR and force-redeploys the ECS service; builds the web app and syncs `apps/web/dist` to S3, then invalidates CloudFront
