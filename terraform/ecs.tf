@@ -35,13 +35,20 @@ resource "aws_ecs_task_definition" "api" {
 
     environment = [
       { name = "PORT", value = "4000" },
-      { name = "CORS_ORIGIN", value = "https://${aws_cloudfront_distribution.web.domain_name}" }
+      { name = "CORS_ORIGIN", value = "https://${aws_cloudfront_distribution.web.domain_name}" },
+      { name = "BETTER_AUTH_URL", value = "https://${aws_cloudfront_distribution.web.domain_name}" },
     ]
 
-    secrets = [{
-      name      = "MONGODB_URI"
-      valueFrom = aws_ssm_parameter.mongodb_uri.arn
-    }]
+    secrets = [
+      {
+        name      = "MONGODB_URI"
+        valueFrom = aws_ssm_parameter.mongodb_uri.arn
+      },
+      {
+        name      = "BETTER_AUTH_SECRET"
+        valueFrom = aws_ssm_parameter.better_auth_secret.arn
+      },
+    ]
 
     logConfiguration = {
       logDriver = "awslogs"

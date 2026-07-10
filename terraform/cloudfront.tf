@@ -30,7 +30,26 @@ resource "aws_cloudfront_distribution" "web" {
     }
   }
 
-  # Route /graphql to the API
+  # Route /api/auth/* to the API (Better Auth — must forward cookies)
+  ordered_cache_behavior {
+    path_pattern     = "/api/auth/*"
+    target_origin_id = "alb-api"
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods   = ["GET", "HEAD"]
+
+    forwarded_values {
+      query_string = true
+      headers      = ["Authorization", "Content-Type", "Origin", "Host"]
+      cookies { forward = "all" }
+    }
+
+    viewer_protocol_policy = "redirect-to-https"
+    min_ttl                = 0
+    default_ttl            = 0
+    max_ttl                = 0
+  }
+
+  # Route /graphql to the API (forward cookies so session is checked on each request)
   ordered_cache_behavior {
     path_pattern     = "/graphql"
     target_origin_id = "alb-api"
@@ -40,7 +59,7 @@ resource "aws_cloudfront_distribution" "web" {
     forwarded_values {
       query_string = true
       headers      = ["Authorization", "Content-Type"]
-      cookies { forward = "none" }
+      cookies { forward = "all" }
     }
 
     viewer_protocol_policy = "redirect-to-https"

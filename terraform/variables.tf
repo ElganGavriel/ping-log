@@ -22,6 +22,12 @@ variable "mongodb_uri" {
   sensitive   = true
 }
 
+variable "better_auth_secret" {
+  description = "Secret key for Better Auth session signing (min 32 chars)"
+  type        = string
+  sensitive   = true
+}
+
 variable "api_image_tag" {
   description = "Docker image tag for the API"
   type        = string

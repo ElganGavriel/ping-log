@@ -8,6 +8,14 @@ resource "aws_ssm_parameter" "mongodb_uri" {
   tags = { Name = "${var.app_name}-mongodb-uri" }
 }
 
+resource "aws_ssm_parameter" "better_auth_secret" {
+  name  = "/${var.app_name}/better-auth-secret"
+  type  = "SecureString"
+  value = var.better_auth_secret
+
+  tags = { Name = "${var.app_name}-better-auth-secret" }
+}
+
 # Allow ECS task execution role to read SSM parameters
 resource "aws_iam_role_policy" "ecs_ssm" {
   name = "${var.app_name}-ecs-ssm-policy"
@@ -16,9 +24,12 @@ resource "aws_iam_role_policy" "ecs_ssm" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Effect   = "Allow"
-      Action   = ["ssm:GetParameters", "kms:Decrypt"]
-      Resource = [aws_ssm_parameter.mongodb_uri.arn]
+      Effect = "Allow"
+      Action = ["ssm:GetParameters", "kms:Decrypt"]
+      Resource = [
+        aws_ssm_parameter.mongodb_uri.arn,
+        aws_ssm_parameter.better_auth_secret.arn,
+      ]
     }]
   })
 }
